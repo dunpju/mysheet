@@ -17,13 +17,13 @@ class DropdownMore extends Dropdown {
 
   reset(items) {
     const eles = items.map((it, i) => h('div', `${cssPrefix}-item`)
-        .css('width', '150px')
-        .css('font-weight', 'normal')
-        .on('click', () => {
-          this.contentClick(i);
-          this.hide();
-        })
-        .child(it));
+      .css('width', '150px')
+      .css('font-weight', 'normal')
+      .on('click', () => {
+        this.contentClick(i);
+        this.hide();
+      })
+      .child(it));
     this.setContentChildren(...eles);
   }
 
@@ -37,11 +37,11 @@ const menuItems = [
 
 function buildMenuItem(item) {
   return h('div', `${cssPrefix}-item`)
-      .child(item.title())
-      .on('click', () => {
-        this.itemClick(item.key);
-        this.hide();
-      });
+    .child(item.title())
+    .on('click', () => {
+      this.itemClick(item.key);
+      this.hide();
+    });
 }
 
 function buildMenu() {
@@ -51,9 +51,9 @@ function buildMenu() {
 class ContextMenu {
   constructor() {
     this.el = h('div', `${cssPrefix}-contextmenu`)
-        .css('width', '160px')
-        .children(...buildMenu.call(this))
-        .hide();
+      .css('width', '160px')
+      .children(...buildMenu.call(this))
+      .hide();
     this.itemClick = () => {};
   }
 
@@ -73,9 +73,9 @@ class ContextMenu {
 
 export default class Bottombar {
   constructor(addFunc = () => {},
-              swapFunc = () => {},
-              deleteFunc = () => {},
-              updateFunc = () => {}) {
+    swapFunc = () => {},
+    deleteFunc = () => {},
+    updateFunc = () => {}) {
     this.swapFunc = swapFunc;
     this.updateFunc = updateFunc;
     this.dataNames = [];
@@ -87,12 +87,14 @@ export default class Bottombar {
     });
     const that = this;
     this.contextMenu = new ContextMenu();
+    // eslint-disable-next-line func-names
     this.contextMenu.itemClick = function (p) {
-      if ('delete' === p) { // 删除
-        deleteFunc()
-      } else if ('rename' === p) { // 重命名
+      if (p === 'delete') { // 删除
+        deleteFunc();
+      } else if (p === 'rename') { // 重命名
+        // eslint-disable-next-line no-plusplus
         for (let index = 0; index < that.items.length; index++) {
-          if (true === that.items[index].el.getAttribute("class").includes('active')) {
+          if (that.items[index].el.getAttribute('class').includes('active') === true) {
             const item = that.items[index];
             that.sheetRenameItem(item);
             break;
@@ -101,15 +103,15 @@ export default class Bottombar {
       }
     };
     this.el = h('div', `${cssPrefix}-bottombar`).children(
-        this.contextMenu.el,
-        this.menuEl = h('ul', `${cssPrefix}-menu`).child(
-            h('li', '').children(
-                new Icon('add').on('click', () => {
-                  addFunc();
-                }),
-                h('span', '').child(this.moreEl),
-            ),
+      this.contextMenu.el,
+      this.menuEl = h('ul', `${cssPrefix}-menu`).child(
+        h('li', '').children(
+          new Icon('add').on('click', () => {
+            addFunc();
+          }),
+          h('span', '').child(this.moreEl),
         ),
+      ),
     );
   }
 
@@ -189,16 +191,21 @@ export default class Bottombar {
     const v = item.html();
     const input = new FormInput('auto', '');
     input.val(v);
-    input.input.on('blur', ({ target }) => {
-      const { value } = target;
+    input.input.on('blur', (key) => {
+      const { value } = key.target;
       const nindex = this.dataNames.findIndex(it => it === v);
-      this.renameItem(nindex, value);
-      /*
-      this.dataNames.splice(nindex, 1, value);
-      this.moreEl.reset(this.dataNames);
-      item.html('').child(value);
-      this.updateFunc(nindex, value);
-      */
+      if (nindex > -1 && value !== '') {
+        this.renameItem(nindex, value);
+      }
+    }).on('keydown', (key) => {
+      const code = key.keyCode || key.which || key.charCode;
+      if (code === 13) {
+        const { value } = key.target;
+        const nindex = this.dataNames.findIndex(it => it === v);
+        if (nindex > -1 && value !== '') {
+          this.renameItem(nindex, value);
+        }
+      }
     });
     item.html('').child(input.el);
     input.focus();

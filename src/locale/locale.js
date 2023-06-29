@@ -5,7 +5,7 @@ import zh from './zh-cn';
 // Defines the fallback language as English
 let $languages = ['zh'];
 const $messages = {
-  zh
+  zh,
 };
 
 function translate(key, messages) {
