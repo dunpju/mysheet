@@ -25,7 +25,9 @@ module.exports = merge(common, {
   },
   devtool: 'inline-source-map',
   devServer: {
-    host: 'localhost',
+    disableHostCheck: true,
+    host: '0.0.0.0',
+    port: 3000, // 暴露端口
     contentBase: '../dist',
   },
 });

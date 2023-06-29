@@ -43,6 +43,7 @@ export default {
     cellnonprintable: 'Disable export',
     celleditable: 'Enable editing',
     cellnoneditable: 'Disable editing',
+    rename: 'Rename', // 菜单重命名
   },
   print: {
     size: 'Paper size',

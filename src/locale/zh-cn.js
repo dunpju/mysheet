@@ -43,6 +43,7 @@ export default {
     cellnonprintable: '不可打印',
     celleditable: '可编辑',
     cellnoneditable: '不可编辑',
+    rename: '重命名', // 增加重命名
   },
   print: {
     size: '纸张大小',
