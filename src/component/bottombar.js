@@ -192,22 +192,25 @@ export default class Bottombar {
     const input = new FormInput('auto', '');
     input.val(v);
     input.input.on('blur', (key) => {
-      const { value } = key.target;
-      const nindex = this.dataNames.findIndex(it => it === v);
-      if (nindex > -1 && value !== '') {
-        this.renameItem(nindex, value);
-      }
+      this.renameSwitch(key, v);
     }).on('keydown', (key) => {
       const code = key.keyCode || key.which || key.charCode;
-      if (code === 13) {
-        const { value } = key.target;
-        const nindex = this.dataNames.findIndex(it => it === v);
-        if (nindex > -1 && value !== '') {
-          this.renameItem(nindex, value);
-        }
+      if (code === 13 || code === 27) { // 回车、ESC
+        this.renameSwitch(key, v);
       }
     });
     item.html('').child(input.el);
     input.focus();
+  }
+
+  renameSwitch(key, v) {
+    let { value } = key.target;
+    const nindex = this.dataNames.findIndex(it => it === v);
+    if (value === '') {
+      value = v;
+    }
+    if (nindex > -1 && value !== '') {
+      this.renameItem(nindex, value);
+    }
   }
 }
